@@ -39,7 +39,7 @@ jobs:
       - name: Run Container and Build Site
         uses: addnab/docker-run-action@v3
         with:
-          image: carpentries/workbench-docker:0.0.1-alpha
+          image: "carpentries/workbench-docker:0.0.1-alpha"
           options: -v ${{ github.workspace }}:/home/rstudio/lesson
           shell: Rscript {0}
           run: |
