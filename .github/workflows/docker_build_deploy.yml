@@ -42,6 +42,7 @@ jobs:
             -v ${{ github.workspace }}:/home/rstudio/lesson \
             -w /home/rstudio/lesson \
             carpentries/workbench-docker:0.0.1-alpha \
+            bash -c "Rscript -e 'library(sandpaper)'" \
             bash -c "Rscript -e 'sandpaper::package_cache_trigger(TRUE)'" \
             bash -c "Rscript -e 'sandpaper:::ci_deploy(reset = TRUE)'" | tee docker_output.log
 
