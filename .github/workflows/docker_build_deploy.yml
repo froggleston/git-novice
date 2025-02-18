@@ -21,10 +21,7 @@ on:
 jobs:
   full-build:
     name: "Build Full Site"
-
-    # 2024-10-01: ubuntu-latest is now 24.04 and R is not installed by default in the runner image
-    # pin to 22.04 for now
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       checks: write
       contents: write
@@ -36,17 +33,41 @@ jobs:
       - name: "Checkout Lesson"
         uses: actions/checkout@v4
 
-      - name: Set Image Name
-        run: echo "INPUT_IMAGE=carpentries/workbench-docker:0.0.1-alpha" >> $GITHUB_ENV
+      - name: Pull Docker Image
+        run: docker pull carpentries/workbench-docker:0.0.1-alpha  # Pull from public Docker Hub
 
-      - name: "Docker Build Site"
+      - name: Run Container and Build Site
         uses: addnab/docker-run-action@v3
         with:
-            image: carpentries/workbench-docker:0.0.1-alpha
-            shell: Rscript {0}
-            run: |
-              reset <- "${{ github.event.inputs.reset }}" == "true"
-              setwd("/home/rstudio/lesson")
-              sandpaper::package_cache_trigger(TRUE)
-              sandpaper:::ci_deploy(reset = reset)
+          image: carpentries/workbench-docker:0.0.1-alpha
+          options: -v ${{ github.workspace }}:/home/rstudio/lesson
+          shell: Rscript {0}
+          run: |
+            reset <- "${{ github.event.inputs.reset }}" == "true"
+            setwd("/home/rstudio/lesson")
+            sandpaper::package_cache_trigger(TRUE)
+            sandpaper:::ci_deploy(reset = reset)
+          
+      #     shell: bash
+      #     run: |
+      #       cd /home/rstudio/lesson
+      #       Rscript -e "sandpaper::ci_deploy(reset = reset)"
+      #       echo "Build complete."
+
+      # - name: Deploy to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: _site  # Ensure this matches the site output directory
+
+      # - name: "Docker Build Site"
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #       image: carpentries/workbench-docker:0.0.1-alpha
+      #       shell: Rscript {0}
+      #       run: |
+      #         reset <- "${{ github.event.inputs.reset }}" == "true"
+      #         setwd("/home/rstudio/lesson")
+      #         sandpaper::package_cache_trigger(TRUE)
+      #         sandpaper:::ci_deploy(reset = reset)
         
