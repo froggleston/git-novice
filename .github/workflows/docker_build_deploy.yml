@@ -38,9 +38,12 @@ jobs:
 
       - name: "Docker Build Site"
         uses: addnab/docker-run-action@v3
+        env:
+          LESSON_PATH: ${{ github.workspace }}
         with:
             image: carpentries/workbench-docker:0.0.1-alpha
-            options: -v ${{ github.workspace }}:/home/rstudio/lesson
+            options: >-
+              -v ${{ github.workspace }}:/home/rstudio/lesson
             shell: Rscript {0}
             run: |
               reset <- "${{ github.event.inputs.reset }}" == "true"
