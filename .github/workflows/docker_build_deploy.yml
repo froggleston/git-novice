@@ -1,8 +1,5 @@
 name: "DOCKER Build and Deploy Site"
 
-env:
-  WORKBENCH_TAG: ${{ vars.WORKBENCH_TAG || 'latest' }}
-
 on:
   push:
     branches:
@@ -30,7 +27,7 @@ jobs:
       contents: write
       pages: write
     container:
-      image: carpentries/workbench-docker:$WORKBENCH_TAG
+      image: carpentries/workbench-docker:${{ vars.WORKBENCH_TAG || 'latest' }}
       env:
         GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         RENV_PATHS_ROOT: ~/.local/share/renv/
