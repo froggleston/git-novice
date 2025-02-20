@@ -30,7 +30,7 @@ jobs:
       contents: write
       pages: write
     container:
-      image: carpentries/workbench-docker:${{ env.WORKBENCH_TAG }}
+      image: carpentries/workbench-docker:$WORKBENCH_TAG
       env:
         GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         RENV_PATHS_ROOT: ~/.local/share/renv/
