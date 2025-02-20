@@ -47,6 +47,10 @@ jobs:
           ls -lah /home/rstudio/lesson
           Rscript -e 'sessionInfo()'
 
+      - name: Mark Repository as Safe
+        run: |
+          git config --global --add safe.directory /home/rstudio/lesson
+
       - name: Run Container and Build Site
         run: |
           Rscript -e 'library(sandpaper)'
