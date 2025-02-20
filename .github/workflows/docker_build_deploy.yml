@@ -26,31 +26,38 @@ jobs:
       checks: write
       contents: write
       pages: write
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      RENV_PATHS_ROOT: ~/.local/share/renv/
+    container:
+      image: carpentries/workbench-docker:0.0.1-alpha
+      env:
+        GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+        RENV_PATHS_ROOT: ~/.local/share/renv/
+      volumes:
+        - ${{ github.workspace }}:/home/rstudio/lesson
+      options: --cpus 1      
     steps:
       - name: "Checkout Lesson"
         uses: actions/checkout@v4
 
-      - name: Pull Docker Image
-        run: docker pull carpentries/workbench-docker:0.0.1-alpha  # Pull from public Docker Hub
+      # - name: Pull Docker Image
+      #   run: docker pull carpentries/workbench-docker:0.0.1-alpha  # Pull from public Docker Hub
+
+      - name: Debugging Info
+        run: |
+          echo "Current Directory: $(pwd)"
+          ls -lah /home/rstudio/lesson
+          Rscript -e 'sessionInfo()'
 
       - name: Run Container and Build Site
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/home/rstudio/lesson \
-            -w /home/rstudio/lesson \
-            carpentries/workbench-docker:0.0.1-alpha \
-            bash -c "Rscript -e 'library(sandpaper)'" \
-            bash -c "Rscript -e 'sandpaper::package_cache_trigger(TRUE)'" \
-            bash -c "Rscript -e 'sandpaper:::ci_deploy(reset = TRUE)'" | tee docker_output.log
-
-      - name: Upload Docker Logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-logs
-          path: docker_output.log
+          Rscript -e 'library(sandpaper)'
+          Rscript -e 'sandpaper::package_cache_trigger(TRUE)'
+          Rscript -e 'sandpaper:::ci_deploy(reset = TRUE)'
+        
+      # - name: Upload Docker Logs
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: docker-logs
+      #     path: docker_output.log
             
       # bash -c "Rscript -e 'reset <- ${{ github.event.inputs.reset }} == true'" \      
       # bash -c "Rscript -e 'sandpaper::build_site()'"
