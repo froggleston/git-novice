@@ -22,12 +22,14 @@ jobs:
   full-build:
     name: "Build Full Site"
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ vars.TAG || 'latest' }}
     permissions:
       checks: write
       contents: write
       pages: write
     container:
-      image: carpentries/workbench-docker:0.0.1-alpha
+      image: carpentries/workbench-docker:${{ env.TAG }}
       env:
         GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         RENV_PATHS_ROOT: ~/.local/share/renv/
