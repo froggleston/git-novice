@@ -46,7 +46,7 @@ jobs:
 
       - name: Mark Repository as Safe
         run: |
-          git config --global --add safe.directory /__w/git-novice/git-novice
+          git config --global --add safe.directory $(pwd)
 
       - name: Run Container and Build Site
         run: |
