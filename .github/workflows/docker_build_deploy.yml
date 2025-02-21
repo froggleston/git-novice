@@ -29,24 +29,39 @@ jobs:
     container:
       image: carpentries/workbench-docker:${{ vars.WORKBENCH_TAG || 'latest' }}
       env:
+        WORKBENCH_PROFILE: "ci"
         GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-        RENV_PATHS_ROOT: ~/.local/share/renv/
+        RENV_PATHS_ROOT: ~/.local/share/renv/       
       volumes:
         - ${{ github.workspace }}:/home/rstudio/lesson
-      options: --cpus 1      
+      options: --cpus 1
     steps:
       - name: "Checkout Lesson"
         uses: actions/checkout@v4
 
+      - name: Current env
+        run: env | sort      
+
       - name: Debugging Info
         run: |
           echo "Current Directory: $(pwd)"
-          ls -lah /home/rstudio/lesson
+          ls -lah /
+          ls -lah /__w
+          ls -lah /__w/${{ github.event.repository.name }}
+          ls -lah $(pwd)
           Rscript -e 'sessionInfo()'
 
       - name: Mark Repository as Safe
         run: |
           git config --global --add safe.directory $(pwd)
+
+      # - name: Setup Lesson Dependencies
+      #   run: |
+      #     Rscript /__w/.workbench/setup_lesson_deps.R
+
+      # - name: Fortify renv Cache
+      #   run: |
+      #     Rscript /__w/.workbench/fortify_renv_cache.R
 
       - name: Run Container and Build Site
         run: |
