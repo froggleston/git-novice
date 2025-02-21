@@ -45,9 +45,7 @@ jobs:
       - name: Debugging Info
         run: |
           echo "Current Directory: $(pwd)"
-          ls -lah /
-          ls -lah /__w
-          ls -lah /__w/${{ github.event.repository.name }}
+          ls -lah /home/rstudio/.workbench
           ls -lah $(pwd)
           Rscript -e 'sessionInfo()'
 
@@ -55,13 +53,13 @@ jobs:
         run: |
           git config --global --add safe.directory $(pwd)
 
-      # - name: Setup Lesson Dependencies
-      #   run: |
-      #     Rscript /__w/.workbench/setup_lesson_deps.R
+      - name: Setup Lesson Dependencies
+        run: |
+          Rscript /home/rstudio/.workbench/setup_lesson_deps.R
 
-      # - name: Fortify renv Cache
-      #   run: |
-      #     Rscript /__w/.workbench/fortify_renv_cache.R
+      - name: Fortify renv Cache
+        run: |
+          Rscript /home/rstudio/.workbench/fortify_renv_cache.R
 
       - name: Run Container and Build Site
         run: |
