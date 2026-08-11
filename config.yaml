@@ -92,7 +92,3 @@ profiles:
 url: 'https://swcarpentry.github.io/git-novice'
 analytics: carpentries
 lang: en
-
-sandpaper: carpentries/sandpaper@frog-wcag-1
-varnish: carpentries/varnish@frog-wcag-1
-
