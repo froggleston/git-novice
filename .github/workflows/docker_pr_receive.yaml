@@ -96,7 +96,7 @@ jobs:
 
       - name: "Check PR"
         id: check-pr
-        uses: carpentries/actions/check-valid-pr@main
+        uses: carpentries/actions/check-valid-pr@v1
         with:
           pr: ${{ env.NR }}
           invalid: ${{ fromJSON(steps.hash.outputs.json)[github.repository] }}
@@ -114,7 +114,7 @@ jobs:
 
       - name: "Is renv required?"
         id: renv-check
-        uses: carpentries/actions/renv-checks@frog-ghcr-dep-layer-1
+        uses: carpentries/actions/renv-checks@v1
         with:
           CACHE_VERSION: ${{ inputs.CACHE_VERSION || '' }}
           skip-cache-check: true
